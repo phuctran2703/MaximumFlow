@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Geocoding API -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
+    <style>
+        #map {
+            height: 700px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="flex flex-col md:flex-row">
+        <!-- Sidebar -->
+        <div id="sidebar" class="p-4 w-full md:w-1/4 bg-white shadow-lg">
+            <h3 class="text-2xl font-bold mb-4">Tìm đường đi</h3>
+            <form id="search-form" class="space-y-4">
+                <label for="start" class="block">Chọn điểm đi:</label>
+                <div class="flex items-center">
+                    <input type="text" id="start" class="p-2 border border-gray-300 rounded-lg w-full" placeholder="Nhập địa chỉ hoặc tọa độ">
+                    <button type="button" id="search-start" class="ml-2 p-2 bg-green-500 text-white rounded-lg">🔍</button>
+                </div>
+                <div id="result-start" class="mt-2"></div>
+
+                <label for="end" class="block">Chọn điểm đến:</label>
+                <div class="flex items-center">
+                    <input type="text" id="end" class="p-2 border border-gray-300 rounded-lg w-full" placeholder="Nhập địa chỉ hoặc tọa độ">
+                    <button type="button" id="search-end" class="ml-2 p-2 bg-green-500 text-white rounded-lg">🔍</button>
+                </div>
+                <div id="result-end" class="mt-2"></div>
+
+                <div>
+                    <label for="algorithm" class="block mb-4">Chọn thuật toán:</label>
+                    <select id="algorithm" class="p-2 border border-gray-300 rounded-lg w-full">
+                        <option value="1">Thuật toán 1</option>
+                        <option value="2">Thuật toán 2</option>
+                        <option value="3">Thuật toán 3</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Content -->
+        <div id="content" class="flex-1 p-4">
+            <div id="map" class="rounded-lg shadow-lg"></div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Geocoding API -->
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="../static/javascript/script.js"></script>
+</body>
+</html>
