@@ -7,10 +7,11 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 const geocoder = L.Control.Geocoder.nominatim();
 
 function addMarker(lat, lng, popupText) {
-    L.marker([lat, lng]).addTo(map)
+    marker = L.marker([lat, lng]).addTo(map)
         .bindPopup(popupText)
         .openPopup();
     map.setView([lat, lng], 18);
+    return marker;
 }
 
 let routeLine;
@@ -34,7 +35,11 @@ async function findRoute(startCoords, endCoords, algorithm) {
     }
 }
 
-function handleSearch(inputId, resultDivId, labelText, coordVar) {
+let startMarker = null;
+let endMarker = null;
+let tempMarker = null;
+
+function handleSearch(inputId, resultDivId, labelText, coordVar, startflag, endflag) {
     const searchValue = document.getElementById(inputId).value;
     const resultsDiv = document.getElementById(resultDivId);
     resultsDiv.innerHTML = '';
@@ -51,11 +56,7 @@ function handleSearch(inputId, resultDivId, labelText, coordVar) {
                 resultItem.dataset.lng = result.center.lng;
 
                 resultItem.addEventListener('mouseover', function() {
-                    tempMarker = L.marker([this.dataset.lat, this.dataset.lng])
-                        .addTo(map)
-                        .bindPopup(`${labelText}: ${this.textContent}`)
-                        .openPopup();
-                    map.setView([this.dataset.lat, this.dataset.lng], 18);
+                    tempMarker = addMarker(this.dataset.lat, this.dataset.lng, `${labelText}: ${this.textContent}`)
                 });
 
                 resultItem.addEventListener('mouseout', function() {
@@ -66,7 +67,14 @@ function handleSearch(inputId, resultDivId, labelText, coordVar) {
                 resultItem.addEventListener('click', function() {
                     document.getElementById(inputId).value = this.textContent;
                     window[coordVar] = [this.dataset.lat, this.dataset.lng];
-                    addMarker(this.dataset.lat, this.dataset.lng, `${labelText}: ${this.textContent}`);
+                    if (startflag){
+                        if (startMarker) map.removeLayer(startMarker);
+                        startMarker = tempMarker;
+                    }
+                    else if (endflag){
+                        if (endMarker) map.removeLayer(endMarker);
+                        endMarker = tempMarker;
+                    }
                     resultsDiv.innerHTML = '';
                 });
 
@@ -78,8 +86,8 @@ function handleSearch(inputId, resultDivId, labelText, coordVar) {
     });
 }
 
-document.getElementById("search-start").addEventListener("click", () => handleSearch("start", "result-start", "Starting point", "startCoords"));
-document.getElementById("search-end").addEventListener("click", () => handleSearch("end", "result-end", "Ending point", "endCoords"));
+document.getElementById("search-start").addEventListener("click", () => handleSearch("start", "result-start", "Starting point", "startCoords", true, false));
+document.getElementById("search-end").addEventListener("click", () => handleSearch("end", "result-end", "Ending point", "endCoords", false, true));
 
 document.getElementById("search-form").addEventListener("submit", function(event) {
     event.preventDefault();
