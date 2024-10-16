@@ -9,7 +9,7 @@ def index():
 @app.route('/find_route', methods=['POST'])
 def find_route_api():
     data = request.json
-    start_coords = data.get('start')
+    start_coords = data.get('start') #['10.773358', '106.6611492']
     end_coords = data.get('end')
     algorithm = data.get('algorithm')
 
@@ -22,6 +22,7 @@ def find_route_api():
 
 #################
     if algorithm == "1": pass
+
     route = [[10.7769, 106.6670], [10.7775, 106.6680], [10.7780, 106.6690], [10.7790, 106.6700], [10.7800, 106.6710]]
 ##################
 
