@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, render_template
+import json
 
 app = Flask(__name__)
 
@@ -25,6 +26,16 @@ def find_route_api():
 
     route = [[10.7769, 106.6670], [10.7775, 106.6680], [10.7780, 106.6690], [10.7790, 106.6700], [10.7800, 106.6710]]
 ##################
+
+    log_data = {
+        "start": start_coords,
+        "end": end_coords,
+        "algorithm": algorithm
+    }
+
+    with open('route_log.json', 'a') as json_file:
+        json.dump(log_data, json_file)
+        json_file.write("\n")  # Write a newline to separate records
 
     return jsonify({"route": route})  # Return JSON including coordinates
 
