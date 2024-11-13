@@ -13,10 +13,10 @@ class Graph:
         self.adj_matrix = defaultdict(lambda: defaultdict(lambda: None))
 
     def load_data_from_excel(self, file_name):
-        df = pd.read_excel(file_name, usecols="B:G")
+        df = pd.read_excel(file_name, usecols="A:E")
         df.fillna(0, inplace=True)
         for index, row in df.iterrows():
-            self.adj_matrix[row["Column"]][row["Row"]] = Edge(row["Flow"],row["Capacity"],row["Distance"])
+            self.adj_matrix[row["Coordinates1"]][row["Coordinates2"]] = Edge(row["Flow"],row["Capacity"],row["Distance"])
         
         print(f"Data has been loaded from {file_name}")
         return self.adj_matrix
@@ -56,7 +56,5 @@ class Graph:
 
 if __name__ == "__main__":
     graph = Graph()
-    graph.load_data_from_csv("data/graph_matrix.csv")
-    print(len(graph.adj_matrix))
-    edge = graph.adj_matrix["(10.8032397, 106.6845465)"]["(10.8017564, 106.6830292)"]
-    print(f"Flow: {edge.flow}, Capacity: {edge.capacity}, Distance: {edge.distance}")
+    graph.load_data_from_excel("data/street_graph_data.xlsx")
+    graph.export_to_csv("data/adj_matrix_data.csv")

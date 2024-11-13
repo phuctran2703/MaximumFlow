@@ -77,8 +77,8 @@ class EdmondsKarp:
 
 if __name__ == "__main__":
     graph = Graph()
-    data = graph.load_data_from_excel("data/test.xlsx")
+    data = graph.load_data_from_excel("data/street_graph_data.xlsx")
     ek = EdmondsKarp(data)
-    flow_path = ek.find_max_flow(0,5)
+    flow_path = ek.find_max_flow("(10.774706, 106.6995506)","(10.7740726, 106.6990186)")
     print(flow_path)
     
