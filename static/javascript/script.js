@@ -49,6 +49,9 @@ function drawRoutes(routes) {
         const routeLine = L.polyline(route, { color: color, weight: 8 }).addTo(map);
         routeLines.push(routeLine);
 
+        // Thêm popup để hiển thị flow trên tuyến đường
+        routeLine.bindPopup(`Flow: ${flow}`).openPopup();
+
         // Thêm bindTooltip để hiển thị flow trên tuyến đường
         routeLine.bindTooltip(`Flow: ${flow}`, { permanent: true, direction: "center", className: "flow-tooltip" }).openTooltip();
     });
@@ -93,7 +96,7 @@ function handleSearch(inputId, resultDivId, labelText, coordVar, startflag, endf
                 resultItem.dataset.lng = result.center.lng;
 
                 resultItem.addEventListener('mouseover', function() {
-                    tempMarker = addMarker(this.dataset.lat, this.dataset.lng, `${labelText}: ${this.textContent}`)
+                    tempMarker = addMarker(this.dataset.lat, this.dataset.lng, `${labelText}`)
                 });
 
                 resultItem.addEventListener('mouseout', function() {

@@ -1,5 +1,6 @@
 from collections import deque, defaultdict
 from graph import *
+import time
 
 class EdmondsKarp:
     def __init__(self, graph):
@@ -73,8 +74,7 @@ class EdmondsKarp:
         # Tính tổng luồng cực đại từ S
         fmax = sum(self.F[S][v] for v in self.F[S])
 
-        # return fmax
-        return self.flow_path
+        return fmax, self.flow_path
 
 def format_result(result):
     converted_result = []
@@ -95,7 +95,9 @@ if __name__ == "__main__":
     graph = Graph()
     data = graph.load_data_from_excel("data/street_graph_data.xlsx")
     ek = EdmondsKarp(data)
-    result = ek.find_max_flow("(10.8000091, 106.6606224)","(10.7999075, 106.6605181)")
-    result = format_result(result)
-    print(result)
+    start_time = time.time()
+    result,_ = ek.find_max_flow("(10.8000091, 106.6606224)","(10.7877414, 106.683245)")
+    end_time = time.time()
+    print("Max flow:", result)
+    print("Duration:", end_time - start_time, "seconds")
     

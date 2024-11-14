@@ -1,4 +1,5 @@
 from collections import defaultdict, deque
+import time
 from graph import *
 
 class PushRelabel:
@@ -78,6 +79,9 @@ class PushRelabel:
 if __name__ == "__main__":
     graph = Graph()
     data = graph.load_data_from_excel("data/street_graph_data.xlsx")
-    ek = PushRelabel(data)
-    flow_path = ek.find_max_flow("(10.8000091, 106.6606224)","(10.7999075, 106.6605181)")
-    print(flow_path)
+    pr = PushRelabel(data)
+    start_time = time.time()
+    result = pr.find_max_flow("(10.8000091, 106.6606224)","(10.7999075, 106.6605181)")
+    end_time = time.time()
+    print("Max flow:", result)
+    print("Duration:", end_time - start_time, "seconds")
