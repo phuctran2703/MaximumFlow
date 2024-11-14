@@ -93,7 +93,7 @@ def format_coordinates(coord_list):
 
 if __name__ == "__main__":
     graph = Graph()
-    data = graph.load_data_from_excel("data/updated_output.xlsx")
+    data = graph.load_data_from_excel("data/street_graph_data.xlsx")
     ek = EdmondsKarp(data)
     result = ek.find_max_flow("(10.8000091, 106.6606224)","(10.7999075, 106.6605181)")
     result = format_result(result)
