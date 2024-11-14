@@ -57,4 +57,5 @@ class Graph:
 if __name__ == "__main__":
     graph = Graph()
     graph.load_data_from_excel("data/street_graph_data.xlsx")
-    graph.export_to_csv("data/adj_matrix_data.csv")
+    # graph.export_to_csv("data/adj_matrix_data.csv")
+    print(len(graph.adj_matrix))

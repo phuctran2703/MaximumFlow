@@ -1,5 +1,8 @@
 from flask import Flask, request, jsonify, render_template
 import json
+import random
+from graph import *
+from edmonds_karp import *
 
 app = Flask(__name__)
 
@@ -10,44 +13,37 @@ def index():
 @app.route('/find_route', methods=['POST'])
 def find_route_api():
     data = request.json
-    start_coords = data.get('start') #['10.773358', '106.6611492']
+    start_coords = data.get('start')
     end_coords = data.get('end')
     algorithm = data.get('algorithm')
-
-    print(start_coords)
-    print(end_coords)
-    print(algorithm)
 
     if not start_coords or not end_coords or not algorithm:
         return jsonify({"error": "Invalid input"}), 400
 
-#################
-    if algorithm == "1": pass
+    print(algorithm)
+    routes = None
+    if algorithm == "1":
+        graph = Graph()
+        data = graph.load_data_from_excel("data/street_graph_data.xlsx")
+        ek = EdmondsKarp(data)
+        # result = ek.find_max_flow("(10.774706, 106.6995506)","(10.7740726, 106.6990186)")
+        result = ek.find_max_flow(format_coordinates(start_coords), format_coordinates(end_coords))
+        routes = format_result(result)
 
-    route = [
-    [10.774706, 106.6995506],
-    [10.7756638, 106.7004291],
-    [10.7768018, 106.6999227],
-    [10.7758208, 106.6990461],
-    [10.7748371, 106.6981499],
-    [10.7739958, 106.697121],
-    [10.7731556, 106.6976491],
-    [10.7734407, 106.6981058],
-    [10.7740726, 106.6990186]
-]
-##################
-
+        print("completed")
+    if routes==[]: routes = None
     log_data = {
         "start": start_coords,
         "end": end_coords,
-        "algorithm": algorithm
+        "algorithm": algorithm,
+        "routes": routes
     }
 
-    with open('route_log.json', 'a') as json_file:
+    with open('route_log.json', 'w') as json_file:
         json.dump(log_data, json_file)
-        json_file.write("\n")  # Write a newline to separate records
+        json_file.write("\n")
 
-    return jsonify({"route": route})  # Return JSON including coordinates
+    return jsonify({"routes": routes})
 
 if __name__ == '__main__':
     app.run(debug=True)

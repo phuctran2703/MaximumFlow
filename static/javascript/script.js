@@ -21,6 +21,43 @@ function drawRoute(route) {
     map.fitBounds(routeLine.getBounds());
 }
 
+let routeLines = [];
+
+function getRandomColor() {
+    // Tạo các giá trị ngẫu nhiên cho màu đỏ, xanh lá, xanh dương và độ trong suốt
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    const opacity = 0.5;
+
+    // Trả về màu ở định dạng rgba
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
+
+function drawRoutes(routes) {
+    // Xóa các tuyến đường cũ
+    routeLines.forEach(line => map.removeLayer(line));
+    routeLines = [];
+
+    // Vẽ từng tuyến đường với màu, flow, và độ rộng riêng
+    routes.forEach(routeData => {
+        const route = routeData.route;
+        const flow = routeData.flow;
+        const color = getRandomColor();
+
+        // Tạo tuyến đường với độ rộng lớn hơn (ví dụ: 8)
+        const routeLine = L.polyline(route, { color: color, weight: 8 }).addTo(map);
+        routeLines.push(routeLine);
+
+        // Thêm bindTooltip để hiển thị flow trên tuyến đường
+        routeLine.bindTooltip(`Flow: ${flow}`, { permanent: true, direction: "center", className: "flow-tooltip" }).openTooltip();
+    });
+
+    // Điều chỉnh phạm vi bản đồ để phù hợp với tất cả các tuyến đường
+    const bounds = L.latLngBounds(routeLines.flatMap(line => line.getLatLngs()));
+    map.fitBounds(bounds);
+}
+
 async function findRoute(startCoords, endCoords, algorithm) {
     try {
         const response = await fetch('/find_route', {
@@ -29,7 +66,7 @@ async function findRoute(startCoords, endCoords, algorithm) {
             body: JSON.stringify({ start: startCoords, end: endCoords, algorithm })
         });
         const result = await response.json();
-        result.route ? drawRoute(result.route) : alert("Could not find a route.");
+        result.routes ? drawRoutes(result.routes) : alert("Could not find any routes.");
     } catch (error) {
         console.error('Error:', error);
     }
