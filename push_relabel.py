@@ -5,10 +5,6 @@ from graph import *
 class PushRelabel:
     def __init__(self, graph):
         self.G = graph
-        self.residual_graph = defaultdict(lambda: defaultdict(int))
-        self.height = defaultdict(int)  # Nhãn độ cao
-        self.excess = defaultdict(int)  # Luồng dư thừa
-        self.queue = deque()  # Hàng đợi lưu các đỉnh dư thừa
 
     def initialize_residual_graph(self):
         """Khởi tạo đồ thị dư thừa từ đồ thị gốc với flow ban đầu khác 0."""
@@ -20,6 +16,7 @@ class PushRelabel:
 
     def initialize_preflow(self, source):
         """Khởi tạo tiền luồng từ đỉnh nguồn."""
+        self.height = defaultdict(int)
         self.height[source] = len(self.residual_graph)
         for v, _ in self.residual_graph[source].items():
             flow = self.residual_graph[source][v]
@@ -63,7 +60,12 @@ class PushRelabel:
 
     def find_max_flow(self, source, sink):
         """Tìm luồng cực đại từ source đến sink."""
+        self.residual_graph = defaultdict(lambda: defaultdict(int))
         self.sink = sink
+        self.height = defaultdict(int)
+        self.excess = defaultdict(int)
+        self.queue = deque()
+        
         self.initialize_residual_graph()
         self.initialize_preflow(source)
 
@@ -79,9 +81,20 @@ class PushRelabel:
 if __name__ == "__main__":
     graph = Graph()
     data = graph.load_data_from_excel("data/street_graph_data.xlsx")
+
     pr = PushRelabel(data)
-    start_time = time.time()
-    result = pr.find_max_flow("(10.8000091, 106.6606224)","(10.7999075, 106.6605181)")
-    end_time = time.time()
-    print("Max flow:", result)
-    print("Duration:", end_time - start_time, "seconds")
+
+    coordinates = [
+        ("(10.8000091, 106.6606224)", "(10.7877414, 106.683245)"),
+        ("(10.7881629, 106.6830814)", "(10.8226899, 106.7308992)"),
+        ("(10.8394422, 106.6758107)", "(10.8190898, 106.7013338)"),
+        ("(10.7898058, 106.6937982)", "(10.7768031, 106.6861427)"),
+        ("(10.8012894, 106.6659545)", "(10.8003005, 106.6611255)")
+    ]
+
+    for source, sink in coordinates:
+        start_time = time.time()
+        result = pr.find_max_flow(source, sink)
+        end_time = time.time()
+        print(f"Max flow from {source} to {sink}: {result}")
+        print("Duration:", end_time - start_time, "seconds")

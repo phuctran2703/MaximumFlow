@@ -18,7 +18,7 @@ class Graph:
         for index, row in df.iterrows():
             self.adj_matrix[row["Coordinates1"]][row["Coordinates2"]] = Edge(row["Flow"],row["Capacity"],row["Distance"])
         
-        print(f"Data has been loaded from {file_name}")
+        # print(f"Data has been loaded from {file_name}")
         return self.adj_matrix
 
     def load_data_from_csv(self, file_name):
@@ -31,7 +31,7 @@ class Graph:
                 flow, capacity, distance = map(float, value.split("/"))
                 self.adj_matrix[source][target] = Edge(flow, capacity, distance)
 
-        print(f"Data has been loaded from {file_name}")
+        # print(f"Data has been loaded from {file_name}")
         return self.adj_matrix
 
     def display(self):

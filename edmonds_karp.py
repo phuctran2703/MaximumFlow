@@ -5,9 +5,6 @@ import time
 class EdmondsKarp:
     def __init__(self, graph):
         self.G = graph
-        self.G_R = defaultdict(dict)
-        self.F = defaultdict(lambda: defaultdict(int))
-        self.flow_path = []
 
     def build_residual_graph(self):
         """Xây dựng đồ thị dư thừa G_R từ G với dung lượng cạnh"""
@@ -38,6 +35,10 @@ class EdmondsKarp:
 
     def find_max_flow(self, S, T):
         """Tính luồng cực đại từ S đến T"""
+        self.G_R = defaultdict(dict)
+        self.F = defaultdict(lambda: defaultdict(int))
+        self.flow_path = []
+
         self.build_residual_graph()
 
         while True:
@@ -58,6 +59,7 @@ class EdmondsKarp:
             v = T
             while v != S:
                 u = parent[v]
+                # Điều chỉnh phù hợp với đồ thị vô hướng
                 self.F[u][v] += cmin
                 self.F[v][u] += cmin
                 self.G_R[u][v] -= cmin
@@ -94,10 +96,21 @@ def format_coordinates(coord_list):
 if __name__ == "__main__":
     graph = Graph()
     data = graph.load_data_from_excel("data/street_graph_data.xlsx")
+
     ek = EdmondsKarp(data)
-    start_time = time.time()
-    result,_ = ek.find_max_flow("(10.8000091, 106.6606224)","(10.7877414, 106.683245)")
-    end_time = time.time()
-    print("Max flow:", result)
-    print("Duration:", end_time - start_time, "seconds")
+
+    coordinates = [
+        ("(10.8000091, 106.6606224)", "(10.7877414, 106.683245)"),
+        ("(10.7881629, 106.6830814)", "(10.8226899, 106.7308992)"),
+        ("(10.8394422, 106.6758107)", "(10.8190898, 106.7013338)"),
+        ("(10.7898058, 106.6937982)", "(10.7768031, 106.6861427)"),
+        ("(10.8012894, 106.6659545)", "(10.8003005, 106.6611255)")
+    ]
+
+    for start, end in coordinates:
+        start_time = time.time()
+        result, _ = ek.find_max_flow(start, end)
+        end_time = time.time()
+        print(f"Max flow from {start} to {end}: {result}")
+        print("Duration:", end_time - start_time, "seconds")
     
