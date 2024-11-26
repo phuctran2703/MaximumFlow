@@ -29,6 +29,15 @@ def find_route_api():
         routes = format_result(result)
 
         print("completed")
+
+    if algorithm == "2":
+        graph = Graph()
+        data = graph.load_data_from_excel("data/street_graph_data.xlsx")
+        dinic = Dinic(data)
+        _, result = dinic.find_max_flow(format_coordinates(start_coords), format_coordinates(end_coords))
+        routes = format_result(result)
+
+        print("completed")
     if routes==[]: routes = None
     log_data = {
         "start": start_coords,
